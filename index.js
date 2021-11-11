@@ -16,7 +16,19 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         await client.connect();
-        console.log('database connnect successfully');
+        // console.log('database connnect successfully');
+        const database = client.db('street_burner');
+        const purchasesCollection = database.collection('purchases');
+        // const productsCollection = database.collection('products');
+        // const usersCollection = database.collection('users');
+        // const adminCollection = database.collection('admin');
+
+        app.post('/purchases', async (req, res) => {
+            const purchase = req.body;
+            const result = await purchasesCollection.insertOne(purchase);
+            console.log(result);
+            res.json({ message: 'hello' })
+        })
     }
     finally {
         // await client.close();
