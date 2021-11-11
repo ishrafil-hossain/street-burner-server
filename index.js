@@ -23,11 +23,19 @@ async function run() {
         // const usersCollection = database.collection('users');
         // const adminCollection = database.collection('admin');
 
+        app.get('/purchases', async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email }
+            const cursor = purchasesCollection.find(query);
+            const purchases = await cursor.toArray();
+            res.json(purchases);
+        })
+
         app.post('/purchases', async (req, res) => {
             const purchase = req.body;
             const result = await purchasesCollection.insertOne(purchase);
             console.log(result);
-            res.json({ message: 'hello' })
+            res.json(result)
         })
     }
     finally {
