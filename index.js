@@ -16,13 +16,10 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         await client.connect();
-        // console.log('database connnect successfully');
         const database = client.db('street_burner');
         const purchasesCollection = database.collection('purchases');
         const usersCollection = database.collection('users');
-        // const productsCollection = database.collection('products');
-        // const usersCollection = database.collection('users');
-        // const adminCollection = database.collection('admin');
+        const productsCollection = database.collection('products');
 
         app.get('/purchases', async (req, res) => {
             const email = req.query.email;
@@ -30,6 +27,20 @@ async function run() {
             const cursor = purchasesCollection.find(query);
             const purchases = await cursor.toArray();
             res.json(purchases);
+        })
+
+        // Get all product or Get API 
+        app.get('/products', async (req, res) => {
+            const cursor = productsCollection.find({});
+            const products = await cursor.toArray();
+            res.json(products);
+        })
+
+        // post api or post product 
+        app.post('/products', async (req, res) => {
+            const product = req.body;
+            const result = await productsCollection.insertOne(product);
+            res.json(result);
         })
 
         app.post('/purchases', async (req, res) => {
