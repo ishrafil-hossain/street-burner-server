@@ -3,6 +3,7 @@ const app = express();
 const cors = require('cors');
 require('dotenv').config();
 const { MongoClient } = require('mongodb');
+const ObjectId = require('mongodb').ObjectId;
 
 const port = process.env.PORT || 5000;
 
@@ -21,6 +22,23 @@ async function run() {
         const usersCollection = database.collection('users');
         const productsCollection = database.collection('products');
 
+
+        // Get all purchase product
+        app.get('/purchases/users', async (req, res) => {
+            const cursor = purchasesCollection.find({});
+            const purchases = await cursor.toArray();
+            res.json(purchases);
+        })
+
+        // Delete Purchases a product by admin
+        app.delete('/purchases/users/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await purchasesCollection.deleteOne(query);
+            res.json(result);
+        })
+
+        // Get Individual purchase product 
         app.get('/purchases', async (req, res) => {
             const email = req.query.email;
             const query = { email: email }
@@ -29,11 +47,29 @@ async function run() {
             res.json(purchases);
         })
 
+
+
+        // Delete Purchases Single product by user
+        app.delete('/purchases/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await purchasesCollection.deleteOne(query);
+            res.json(result);
+        })
+
         // Get all product or Get API 
         app.get('/products', async (req, res) => {
             const cursor = productsCollection.find({});
             const products = await cursor.toArray();
             res.json(products);
+        })
+
+        // Delete a product by admin
+        app.delete('/products/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await productsCollection.deleteOne(query);
+            res.json(result);
         })
 
         // post api or post product 
