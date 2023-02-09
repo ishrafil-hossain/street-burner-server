@@ -34,7 +34,7 @@ async function run() {
         // Delete Purchases a product by admin
         app.delete('/purchases/users/:id', async (req, res) => {
             const id = req.params.id;
-            const query = { _id: ObjectId(id) };
+            const query = { _id: new ObjectId(id) };
             const result = await purchasesCollection.deleteOne(query);
             res.json(result);
         })
@@ -53,7 +53,7 @@ async function run() {
         // Delete Purchases Single product by user
         app.delete('/purchases/:id', async (req, res) => {
             const id = req.params.id;
-            const query = { _id: ObjectId(id) };
+            const query = { _id: new ObjectId(id) };
             const result = await purchasesCollection.deleteOne(query);
             res.json(result);
         })
@@ -68,7 +68,7 @@ async function run() {
         // Delete a product by admin
         app.delete('/products/:id', async (req, res) => {
             const id = req.params.id;
-            const query = { _id: ObjectId(id) };
+            const query = { _id: new ObjectId(id) };
             const result = await productsCollection.deleteOne(query);
             res.json(result);
         })
